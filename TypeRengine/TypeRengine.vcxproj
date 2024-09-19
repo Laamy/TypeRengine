@@ -140,6 +140,8 @@
   <ItemGroup>
     <ClInclude Include="DebugLogger.h" />
     <ClInclude Include="Engine\Events\Event.h" />
+    <ClInclude Include="Engine\Service\ServiceBase.h" />
+    <ClInclude Include="Engine\Service\Services\DefaultWinBindsService.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Engine\GameEngine.h" />
   </ItemGroup>

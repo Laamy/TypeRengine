@@ -5,22 +5,27 @@
 
 #include "Events/Event.h"
 
+#define FUNC uint32_t
+
 class GameEngine
 {
 public:
 	sf::RenderWindow* Window;
 
+public: // other
+    std::vector<class ServiceBase*> Services = std::vector<class ServiceBase*>();
+
 public: // events
 	Event<sf::RenderWindow*> OnUpdate;
 
 	// poll'd events
-	Event<void> OnClose;
-	Event<void> OnResized;
-	Event<void> OnGainedFocus;
-	Event<void> OnLostFocus;
+	Event<FUNC> OnClose;
+	Event<FUNC> OnResized;
+	Event<FUNC> OnGainedFocus;
+	Event<FUNC> OnLostFocus;
 
-	Event<void> OnMouseEntered;
-	Event<void> OnMouseLeft;
+	Event<FUNC> OnMouseEntered;
+	Event<FUNC> OnMouseLeft;
 
 	Event<sf::Uint32> OnTextEntered;
 	Event<sf::Event::KeyEvent> OnKeyPressed;
@@ -52,6 +57,7 @@ public:
 		this->Window = new sf::RenderWindow(sf::VideoMode(800, 600), "Test Window");
 
 		this->Window->setFramerateLimit(0); // uncap rq
+        this->Window->setVerticalSyncEnabled(false); // I FUCKING HATE THIS BRO
 
 		while (this->Window->isOpen())
 		{
@@ -62,27 +68,27 @@ public:
 			{
 				if (event.type == sf::Event::Closed)
 				{
-					OnClose.Invoke(void());
+					OnClose.Invoke(NULL);
 					this->Window->close();
 				}
 
 				switch (event.type)
 				{
                     case sf::Event::Closed:
-                        OnClose.Invoke(void());
+                        OnClose.Invoke(NULL);
                         this->Window->close();
                         break;
 
                     case sf::Event::Resized:
-                        OnResized.Invoke(void());
+                        OnResized.Invoke(NULL);
                         break;
 
                     case sf::Event::LostFocus:
-                        OnLostFocus.Invoke(void());
+                        OnLostFocus.Invoke(NULL);
                         break;
 
                     case sf::Event::GainedFocus:
-                        OnGainedFocus.Invoke(void());
+                        OnGainedFocus.Invoke(NULL);
                         break;
 
                     case sf::Event::TextEntered:
@@ -118,11 +124,11 @@ public:
                         break;
 
                     case sf::Event::MouseEntered:
-                        OnMouseEntered.Invoke(void());
+                        OnMouseEntered.Invoke(NULL);
                         break;
 
                     case sf::Event::MouseLeft:
-                        OnMouseLeft.Invoke(void());
+                        OnMouseLeft.Invoke(NULL);
                         break;
 
                     case sf::Event::JoystickButtonPressed:

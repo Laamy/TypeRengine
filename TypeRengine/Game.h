@@ -3,11 +3,18 @@
 
 #include "Engine/GameEngine.h"
 
+#include "Engine/Service/Services/DefaultWinBindsService.h"
+
 class Game : public GameEngine {
 public:
 	Game()
 	{
 		OnUpdate.Hook([this](sf::RenderWindow* window) { this->OnUpdateEvent(window); });
+
+		// setup some services
+		{
+			Services.push_back(new DefaultWinBindsService(this));
+		}
 	}
 
 	void OnUpdateEvent(sf::RenderWindow* window)
