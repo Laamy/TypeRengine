@@ -135,17 +135,42 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Level\Spatial\SpatialMap.cpp" />
+    <ClCompile Include="Engine\Level.cpp" />
     <ClCompile Include="TypeRengine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Components\Components\AABBShapeComponent.h" />
+    <ClInclude Include="Engine\Components\Components\CountComponent.h" />
+    <ClInclude Include="Engine\Components\EntityContext.h" />
+    <ClInclude Include="Engine\Components\FlagComponent.h" />
+    <ClInclude Include="Engine\Components\FlagComponents.h" />
+    <ClInclude Include="Engine\Components\IEntityComponent.h" />
+    <ClInclude Include="Engine\ConCurrent\LockableVector.hpp" />
     <ClInclude Include="DebugLogger.h" />
     <ClInclude Include="Engine\Events\Event.h" />
+    <ClInclude Include="Engine\Level\LevelLayers.h" />
+    <ClInclude Include="Engine\Objects\SolidActor.h" />
+    <ClInclude Include="Engine\Objects\SolidObject.h" />
     <ClInclude Include="Engine\Service\ServiceBase.h" />
     <ClInclude Include="Engine\Service\Services\DefaultWinBindsService.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Engine\GameEngine.h" />
+    <ClInclude Include="Engine\Level\Spatial\SpatialMap.h" />
+    <ClInclude Include="Engine\Level.h" />
+    <ClInclude Include="SDK\ClientInstance.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\fluid.entt.1.0.9\build\fluid.entt.targets" Condition="Exists('..\packages\fluid.entt.1.0.9\build\fluid.entt.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\fluid.entt.1.0.9\build\fluid.entt.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\fluid.entt.1.0.9\build\fluid.entt.targets'))" />
+  </Target>
 </Project>

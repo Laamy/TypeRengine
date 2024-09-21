@@ -3,7 +3,11 @@
 
 #include "SFML/Graphics.hpp"
 
+#include "ConCurrent/LockableVector.hpp"
+
 #include "Events/Event.h"
+
+#include "../DebugLogger.h"
 
 #define FUNC uint32_t
 
@@ -13,7 +17,7 @@ public:
 	sf::RenderWindow* Window;
 
 public: // other
-    std::vector<class ServiceBase*> Services = std::vector<class ServiceBase*>();
+    LockableVector<class ServiceBase*> Services = LockableVector<class ServiceBase*>();
 
 public: // events
 	Event<sf::RenderWindow*> OnUpdate;
