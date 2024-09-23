@@ -8,7 +8,7 @@ public:
 	sf::RectangleShape Shape;
 
 public:
-	SolidObject() {
+	SolidObject() : SolidActor() {
 		Shape = sf::RectangleShape();
 	}
 

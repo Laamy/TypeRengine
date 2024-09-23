@@ -3,15 +3,12 @@
 
 #include <entt/entt.hpp>
 
-#include "../Engine/GameEngine.h"
-#include "../Engine/Level.h"
-
 class ClientInstance {
 public:
-	std::shared_ptr<entt::basic_registry<entt::entity>> EnttRegistry;
-	GameEngine* GameEngine;
+	entt::basic_registry<entt::entity>* EnttRegistry;
+	class GameEngine* GameEngine;
 
-	Level level = Level();
+	class Level* level;
 
 public:
 	__forceinline static ClientInstance* GetSingle() {

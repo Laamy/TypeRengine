@@ -60,6 +60,11 @@ public:
 
 	SpatialMap(std::size_t cellSize = 50) {
 		this->CellSize = cellSize;
+
+		hashGrid = std::unordered_map<int, std::vector<SolidActor*>>();
+		objectsToHashMap = std::unordered_map<SolidActor*, std::vector<int>>();
+		Count = 0;
+		Hashes = 0;
 	}
 
 	__forceinline static int HashPosition(std::size_t CellSize, sf::Vector2f position) {
@@ -74,7 +79,7 @@ public:
 	}
 
 	__forceinline std::vector<int> GetHashesForBounds(sf::FloatRect bounds) {
-		std::vector<int> hashes; // NOTE: replace this with better data structure
+		std::vector<int> hashes{}; // NOTE: replace this with better data structure
 
 		int index = 0;
 
@@ -94,7 +99,7 @@ public:
 		return hashes;
 	}
 
-	__forceinline void AddObject(SolidActor* obj) {
+	void AddObject(SolidActor* obj) {
 		auto Shape = obj->GetShape();
 
 		// TODO: ENTT position and size
@@ -120,7 +125,7 @@ public:
 		}
 	}
 
-	__forceinline void RemoveObject(SolidActor* obj) {
+	void RemoveObject(SolidActor* obj) {
 		auto it = objectsToHashMap.find(const_cast<SolidActor*>(obj));
 		if (it == objectsToHashMap.end())
 			return;
@@ -162,14 +167,12 @@ public:
 		return (maxX - minX + 1) * (maxY - minY + 1);
 	}
 
-	__forceinline std::vector<SolidActor*> GetObjectsInBounds(const sf::FloatRect& bounds) {
-		std::unordered_set<SolidActor*> seenObjects;
+	std::vector<SolidActor*> GetObjectsInBounds(const sf::FloatRect& bounds) {
+		std::unordered_set<SolidActor*> seenObjects{};
 		std::vector<SolidActor*> result{};
 
 		int numHashes = GetHashCount(bounds);
-		std::vector<int> hashes(numHashes);
-
-		hashes = GetHashesForBounds(bounds);
+		std::vector<int> hashes = GetHashesForBounds(bounds);
 
 		for (const auto& hash : hashes) {
 			std::lock_guard<std::mutex> lock(gridMutex); // Lock the grid for thread safety
@@ -179,13 +182,17 @@ public:
 				auto& objects = gridIt->second;
 
 				for (auto* obj : objects) {
-					auto Shape = obj->GetShape();
+					if (obj->Context.isValid() &&
+						obj->Context.hasComponent<AABBShapeComponent>())
+					{
+						auto Shape = obj->GetShape();
 
-					sf::FloatRect objBounds(Shape->Position.x, Shape->Position.y, Shape->Size.x, Shape->Size.y);
+						sf::FloatRect objBounds(Shape->Position.x, Shape->Position.y, Shape->Size.x, Shape->Size.y);
 
-					if (seenObjects.find(obj) == seenObjects.end() && Intersects(objBounds, bounds)) {
-						seenObjects.insert(obj);
-						result.push_back(obj);
+						if (seenObjects.find(obj) == seenObjects.end() && Intersects(objBounds, bounds)) {
+							seenObjects.insert(obj);
+							result.push_back(obj);
+						}
 					}
 				}
 			}

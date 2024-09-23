@@ -4,6 +4,8 @@
 #include "Level/Spatial/SpatialMap.h"
 #include "Level/LevelLayers.h"
 
+class SpatialMap;
+
 class Level {
 public:
 	std::array<SpatialMap, LevelLayers::Count> Layers = {};

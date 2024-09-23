@@ -1,6 +1,8 @@
 #ifndef SOLIDACTOR_H
 #define SOLIDACTOR_H
 
+class ClientInstance;
+
 #include "../Components/EntityContext.h"
 
 #include "../Components/Components/AABBShapeComponent.h"
