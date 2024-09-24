@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="Engine\Components\Components\AABBShapeComponent.h" />
     <ClInclude Include="Engine\Components\Components\CountComponent.h" />
+    <ClInclude Include="Engine\Components\Components\ZoomComponent.h" />
     <ClInclude Include="Engine\Components\EntityContext.h" />
     <ClInclude Include="Engine\Components\FlagComponent.h" />
     <ClInclude Include="Engine\Components\FlagComponents.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="Engine\Level\Spatial\SpatialMap.h" />
     <ClInclude Include="Engine\Level.h" />
     <ClInclude Include="SDK\ClientInstance.h" />
+    <ClInclude Include="SDK\Services\Camera2DService.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

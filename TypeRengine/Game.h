@@ -3,7 +3,9 @@
 
 #include "Engine/GameEngine.h"
 
-#include "Engine/Service/Services/DefaultWinBindsService.h"
+#include "Engine/Service/Services/DefaultWinBindsService.h" // inbuilt service
+#include "SDK/Services/Camera2DService.h"
+
 #include "SDK/ClientInstance.h"
 
 #include "Engine/Level.h"
@@ -32,6 +34,7 @@ public:
 		// setup some services
 		{
 			Services.push_back(new DefaultWinBindsService(this)); // f11 & escape keybinds
+			Services.push_back(new Camera2DService(this)); // basic debug camera (I'll probably use it as the real one too..)
 		}
 		
 		// add some sample objects into da fucking scene

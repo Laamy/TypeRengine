@@ -2,6 +2,6 @@
 #define FLAGCOMPONENT_H
 
 template<typename Flag>
-class FlagComponent : IEntityComponent {};
+class FlagComponent : public IEntityComponent {};
 
 #endif // FLAGCOMPONENT_H

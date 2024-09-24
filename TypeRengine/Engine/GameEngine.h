@@ -24,7 +24,7 @@ public: // events
 
 	// poll'd events
 	Event<FUNC> OnClose;
-	Event<FUNC> OnResized;
+	Event<sf::Event::SizeEvent> OnResized;
 	Event<FUNC> OnGainedFocus;
 	Event<FUNC> OnLostFocus;
 
@@ -85,7 +85,7 @@ public:
 
                     case sf::Event::Resized:
                         this->Window->setSize(sf::Vector2u(event.size.width, event.size.height));//resize before event
-                        OnResized.Invoke(NULL);
+                        OnResized.Invoke(event.size);
                         break;
 
                     case sf::Event::LostFocus:
