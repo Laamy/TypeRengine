@@ -138,10 +138,12 @@
     <ClCompile Include="Engine\Components\Components\AABBShapeComponent.cpp" />
     <ClCompile Include="Engine\Components\Components\CountComponent.cpp" />
     <ClCompile Include="Engine\Components\Components\ZoomComponent.cpp" />
+    <ClCompile Include="Engine\GameEngine.cpp" />
     <ClCompile Include="Engine\Level\Spatial\SpatialMap.cpp" />
     <ClCompile Include="Engine\Level.cpp" />
     <ClCompile Include="Engine\Objects\SolidActor.cpp" />
     <ClCompile Include="Engine\Objects\SolidObject.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="SDK\ClientInstance.cpp" />
     <ClCompile Include="SDK\Services\Camera2DService.cpp" />
     <ClCompile Include="TypeRengine.cpp" />
