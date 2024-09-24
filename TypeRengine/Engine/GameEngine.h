@@ -52,13 +52,13 @@ public: // events
 	Event<sf::Event::TouchEvent> OnTouchEnded;
 
 	Event<sf::Event::SensorEvent> OnSensorChanged;
-
+    
 public:
 	void Start()
 	{
-		DebugLogger::Debug("Test project start");
+        DebugLogger::Debug("Window creation");
 
-		this->Window = new sf::RenderWindow(sf::VideoMode(800, 600), "Test Window");
+		this->Window = new sf::RenderWindow(sf::VideoMode(800, 600), "TypeRengine");
 
 		this->Window->setFramerateLimit(0); // uncap rq
         this->Window->setVerticalSyncEnabled(false); // I FUCKING HATE THIS BRO
@@ -181,7 +181,7 @@ public:
 			OnUpdate.Invoke(this->Window);
 		}
 
-		DebugLogger::Debug("Test project ended");
+		DebugLogger::Debug("Project ended");
 	}
 };
 

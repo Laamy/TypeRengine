@@ -21,13 +21,29 @@ public: // types
 private: // ignore
 	sf::Vector2f initMousePos;
 
+private: // ignore
+	__forceinline void HookEvents() {
+		Engine->OnMouseMoved.Hook([this](sf::Event::MouseMoveEvent e) { OnMouseMoveEvent(e); });
+		Engine->OnMouseButtonPressed.Hook([this](sf::Event::MouseButtonEvent e) { OnMouseButtonPressed(e); });
+		Engine->OnMouseButtonReleased.Hook([this](sf::Event::MouseButtonEvent e) { OnMouseButtonReleased(e); });
+		Engine->OnMouseWheelScrolled.Hook([this](sf::Event::MouseWheelScrollEvent e) { OnMouseWheelScrolled(e); });
+		
+		Engine->OnResized.Hook([this](sf::Event::SizeEvent e) { OnResize(e); });
+		Engine->OnUpdate.Hook([this](sf::RenderWindow* w) { OnUpdate(w); });
+	}
+
 public: // methods
 	Camera2DService(GameEngine* engine) {
 		Init(engine);
 
 		auto size = sf::Vector2u(800, 600); // TODO: get from engine (it errors cuz this is pre-init)
 		Context.addComponent<AABBShapeComponent>(sf::Vector2f(0, 0), sf::Vector2f(size.x, size.y));
-		Context.addComponent<ZoomComponent>(1, 5, 0);
+		Context.addComponent<ZoomComponent>(
+			0.3f,	  // default zoom
+			0.5f,	  // max zoom
+			0.2f,	  // min zoom
+			0.1f	  // step amount
+		);
 
 		// set all of these to by default, TRUE
 		Context.addComponent<FlagComponent<AutoResizeFlag>>();
@@ -38,16 +54,6 @@ public: // methods
 		HookEvents();
 
 		DebugLogger::Print(LogType::Info, "Initialized : Camera2D");
-	}
-
-	__forceinline void HookEvents() {
-		Engine->OnMouseMoved.Hook([this](sf::Event::MouseMoveEvent e) { OnMouseMoveEvent(e); });
-		Engine->OnMouseButtonPressed.Hook([this](sf::Event::MouseButtonEvent e) { OnMouseButtonPressed(e); });
-		Engine->OnMouseButtonReleased.Hook([this](sf::Event::MouseButtonEvent e) { OnMouseButtonReleased(e); });
-		Engine->OnMouseWheelScrolled.Hook([this](sf::Event::MouseWheelScrollEvent e) { OnMouseWheelScrolled(e); });
-		
-		Engine->OnResized.Hook([this](sf::Event::SizeEvent e) { OnResize(e); });
-		Engine->OnUpdate.Hook([this](sf::RenderWindow* w) { OnUpdate(w); });
 	}
 
 	/// <summary>
@@ -72,6 +78,9 @@ public: // methods
 		);
 	}
 
+	/// <summary>
+	/// Set this Camera2D as the active View in RenderWindow
+	/// </summary>
 	__forceinline void SetActive() {
 		auto shape = getShape();
 		auto zoom = getZoom();
@@ -81,7 +90,10 @@ public: // methods
 
 		Engine->Window->setView(view);
 	}
-
+	
+	/// <summary>
+	/// Get the camera bounds in world coordinates
+	/// </summary>
 	inline sf::FloatRect getCameraBounds() {
 		auto shape = getShape();
 		auto zoom = getZoom();
@@ -96,12 +108,18 @@ public: // methods
 		return sf::FloatRect(topLeft, sizeInWorld);
 	}
 
-	inline sf::Vector2f PixelToWorld(sf::RenderWindow, sf::Vector2f pixelPos) {
+	/// <summary>
+	/// Convert pixel coordinates to world coordinates
+	/// </summary>
+	inline sf::Vector2f pixelToWorld(sf::Vector2f pixelPos) {
 		sf::Vector2f worldPos = Engine->Window->mapPixelToCoords(sf::Vector2i(pixelPos.x, pixelPos.y));
 		
 		return worldPos;
 	}
 
+	/// <summary>
+	/// Get the center of the camera in world coordinates
+	/// </summary>
 	inline sf::Vector2f getOrigin() {
 		auto shape = getShape();
 		auto zoom = getZoom();
@@ -146,9 +164,9 @@ public: // events
 
 	__forceinline void OnMouseWheelScrolled(sf::Event::MouseWheelScrollEvent e) {
 		if (isAllowZoom()) {
-			float zoomAmount = 0.1f; // TODO: store in component
-
 			auto zoom = getZoom();
+
+			float zoomAmount = zoom->StepAmount; // TODO: store in component
 
 			// zoom in or out
 			if (e.delta > 0)

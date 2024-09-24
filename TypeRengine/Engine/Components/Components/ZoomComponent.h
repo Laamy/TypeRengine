@@ -9,10 +9,11 @@ public:
 	float Zoom = 1;
 	float MaxZoom = 5;
 	float MinZoom = 0;
+	float StepAmount = 0.1f;
 
 public:
-	ZoomComponent(float Zoom, float MaxZoom, float MinZoom)
-		: Zoom(Zoom), MaxZoom(MaxZoom), MinZoom(MinZoom) {}
+	ZoomComponent(float Zoom, float MaxZoom, float MinZoom, float StepAmount)
+		: Zoom(Zoom), MaxZoom(MaxZoom), MinZoom(MinZoom), StepAmount(StepAmount) {}
 
 	ZoomComponent() = default;
 };
