@@ -8,25 +8,10 @@ public:
 	sf::RectangleShape Shape;
 
 public:
-	SolidObject() : SolidActor() {
-		Shape = sf::RectangleShape();
-	}
+	SolidObject();
 
 public:
-	virtual void Draw() override {
-		ClientInstance* instance = ClientInstance::GetSingle();
-
-		sf::RenderWindow* window = instance->GameEngine->Window;
-
-		AABBShapeComponent* shape = GetShape();
-
-		Shape.setPosition(shape->Position);
-		Shape.setSize(shape->Size);
-
-		Shape.setFillColor(sf::Color(255, 0, 0));
-
-		window->draw(Shape);
-	};
+	virtual void Draw() override;
 };
 
 #endif // SOLIDOBJECT_H

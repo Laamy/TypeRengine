@@ -8,20 +8,19 @@ class ClientInstance;
 #include "../Components/Components/AABBShapeComponent.h"
 #include "../Components/Components/CountComponent.h"
 
+#define DEFINE_GET_COMPONENT(CustomName, ComponentType) \
+    __forceinline ComponentType* Get##CustomName() { return Context.tryGetComponent<ComponentType>(); }
+
 class SolidActor {
 public:
 	EntityContext Context = EntityContext(ClientInstance::GetSingle()->EnttRegistry);
 
 public:
-	SolidActor() {
-		// add the default main components
-		Context.addComponent<AABBShapeComponent>(sf::Vector2f(0, 0), sf::Vector2f(0, 0));
-		Context.addComponent<CountComponent>(1);
-	}
+	SolidActor();
 
-	// unline these as they're basically just macros
-	__forceinline AABBShapeComponent* GetShape() { return Context.tryGetComponent<AABBShapeComponent>(); }
-	__forceinline CountComponent* GetCount() { return Context.tryGetComponent<CountComponent>(); }
+	// some basic macros
+	DEFINE_GET_COMPONENT(Shape, AABBShapeComponent);
+	DEFINE_GET_COMPONENT(Count, CountComponent);
 
 public: // eventless events
 	virtual void Draw() {};
