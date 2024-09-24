@@ -80,10 +80,11 @@ public:
 				{
                     case sf::Event::Closed:
                         OnClose.Invoke(NULL);
-                        this->Window->close();
+                        this->Window->close();//close after event
                         break;
 
                     case sf::Event::Resized:
+                        this->Window->setSize(sf::Vector2u(event.size.width, event.size.height));//resize before event
                         OnResized.Invoke(NULL);
                         break;
 
