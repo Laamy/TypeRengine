@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClCompile Include="Engine\Level\Spatial\SpatialMap.cpp" />
     <ClCompile Include="Engine\Level.cpp" />
+    <ClCompile Include="SDK\ClientInstance.cpp" />
     <ClCompile Include="TypeRengine.cpp" />
   </ItemGroup>
   <ItemGroup>

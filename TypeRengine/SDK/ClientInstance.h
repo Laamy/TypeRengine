@@ -11,10 +11,7 @@ public:
 	class Level* level;
 
 public:
-	__forceinline static ClientInstance* GetSingle() {
-		static ClientInstance* Instance = new ClientInstance();
-		return Instance;
-	}
+	static ClientInstance* GetSingle();
 };
 
 #endif // CLIENTINSTANCE_H
