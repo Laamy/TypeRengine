@@ -135,6 +135,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Components\Components\AABBShapeComponent.cpp" />
+    <ClCompile Include="Engine\Components\Components\CountComponent.cpp" />
+    <ClCompile Include="Engine\Components\Components\ZoomComponent.cpp" />
     <ClCompile Include="Engine\Level\Spatial\SpatialMap.cpp" />
     <ClCompile Include="Engine\Level.cpp" />
     <ClCompile Include="SDK\ClientInstance.cpp" />

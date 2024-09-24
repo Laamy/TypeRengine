@@ -9,9 +9,7 @@ public:
 	std::uint32_t ObjectCount = 1;
 
 public:
-	CountComponent(std::uint32_t ObjectCount) {
-		this->ObjectCount = ObjectCount;
-	}
+	CountComponent(std::uint32_t ObjectCount);
 };
 
 #endif

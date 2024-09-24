@@ -10,10 +10,7 @@ public:
 	sf::Vector2f Size; // upper - position
 
 public:
-	AABBShapeComponent(sf::Vector2f Position, sf::Vector2f Size) {
-		this->Position = Position;
-		this->Size = Size;
-	}
+	AABBShapeComponent(sf::Vector2f Position, sf::Vector2f Size);
 };
 
 #endif // AABBSHAPECOMPONENT_H
