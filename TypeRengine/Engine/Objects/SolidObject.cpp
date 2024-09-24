@@ -11,7 +11,7 @@ void SolidObject::Draw() {
 
 	sf::RenderWindow* window = instance->GameEngine->Window;
 
-	AABBShapeComponent* shape = GetShape();
+	AABBShapeComponent* shape = this->getShape();
 
 	Shape.setPosition(shape->Position);
 	Shape.setSize(shape->Size);

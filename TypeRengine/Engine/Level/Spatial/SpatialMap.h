@@ -100,7 +100,7 @@ public:
 	}
 
 	void AddObject(SolidActor* obj) {
-		auto Shape = obj->GetShape();
+		auto Shape = obj->getShape();
 
 		// TODO: ENTT position and size
 		auto bounds = sf::FloatRect(Shape->Position, Shape->Size);
@@ -120,7 +120,7 @@ public:
 		}
 
 		if (added) {
-			Count += obj->GetCount()->ObjectCount;
+			Count += obj->getCount()->ObjectCount;
 			objectsToHashMap[obj] = objectHashes;
 		}
 	}
@@ -147,7 +147,7 @@ public:
 
 		objectsToHashMap.erase(it);
 
-		Count -= obj->GetCount()->ObjectCount;
+		Count -= obj->getCount()->ObjectCount;
 	}
 
 	/// <summary>
@@ -185,7 +185,7 @@ public:
 					if (obj->Context.isValid() &&
 						obj->Context.hasComponent<AABBShapeComponent>())
 					{
-						auto Shape = obj->GetShape();
+						auto Shape = obj->getShape();
 
 						sf::FloatRect objBounds(Shape->Position.x, Shape->Position.y, Shape->Size.x, Shape->Size.y);
 

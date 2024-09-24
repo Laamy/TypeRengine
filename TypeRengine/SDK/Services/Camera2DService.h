@@ -1,8 +1,6 @@
 #ifndef CAMERA2D_SERVICE_H
 #define CAMERA2D_SERVICE_H
 
-#include <Windows.h>
-
 #include "../../Engine/Service/ServiceBase.h"
 
 #include "../../Engine/Components/EntityContext.h"
@@ -11,6 +9,8 @@
 
 #include "../../Engine/Components/FlagComponents.h"
 #include "../../Engine/Components/FlagComponent.h"
+
+#include "../../Macros.h"
 
 class Camera2DService : public ServiceBase {
 public: // types
@@ -22,182 +22,58 @@ private: // ignore
 	sf::Vector2f initMousePos;
 
 private: // ignore
-	__forceinline void HookEvents() {
-		Engine->OnMouseMoved.Hook([this](sf::Event::MouseMoveEvent e) { OnMouseMoveEvent(e); });
-		Engine->OnMouseButtonPressed.Hook([this](sf::Event::MouseButtonEvent e) { OnMouseButtonPressed(e); });
-		Engine->OnMouseButtonReleased.Hook([this](sf::Event::MouseButtonEvent e) { OnMouseButtonReleased(e); });
-		Engine->OnMouseWheelScrolled.Hook([this](sf::Event::MouseWheelScrollEvent e) { OnMouseWheelScrolled(e); });
-		
-		Engine->OnResized.Hook([this](sf::Event::SizeEvent e) { OnResize(e); });
-		Engine->OnUpdate.Hook([this](sf::RenderWindow* w) { OnUpdate(w); });
-	}
+	void HookEvents();
 
 public: // methods
-	Camera2DService(GameEngine* engine) {
-		Init(engine);
-
-		auto size = sf::Vector2u(800, 600); // TODO: get from engine (it errors cuz this is pre-init)
-		Context.addComponent<AABBShapeComponent>(sf::Vector2f(0, 0), sf::Vector2f(size.x, size.y));
-		Context.addComponent<ZoomComponent>(
-			0.3f,	  // default zoom
-			0.5f,	  // max zoom
-			0.2f,	  // min zoom
-			0.1f	  // step amount
-		);
-
-		// set all of these to by default, TRUE
-		Context.addComponent<FlagComponent<AutoResizeFlag>>();
-		Context.addComponent<FlagComponent<AllowZoomFlag>>();
-		Context.addComponent<FlagComponent<AllowMoveFlag>>();
-
-		// do event hooks
-		HookEvents();
-
-		DebugLogger::Print(LogType::Info, "Initialized : Camera2D");
-	}
+	Camera2DService(GameEngine* engine);
 
 	/// <summary>
 	/// WARNING: Will move camera so the center is still the same as before resize
 	/// </summary>
-	inline void setSize(sf::Vector2f size) {
-		auto shape = getShape();
-		auto zoom = getZoom();
-
-		sf::View tmp = sf::View(sf::FloatRect(shape->Position, shape->Size));
-		auto center = tmp.getCenter();
-
-		shape->Size = size;
-
-		tmp.reset(sf::FloatRect(shape->Position, shape->Size));
-		tmp.zoom(zoom->Zoom);
-		tmp.setCenter(center);
-
-		shape->Position = sf::Vector2f(
-			view.getCenter().x - size.x / 2,
-			view.getCenter().y - size.y / 2
-		);
-	}
+	inline void setSize(sf::Vector2f size);
 
 	/// <summary>
 	/// Set this Camera2D as the active View in RenderWindow
 	/// </summary>
-	__forceinline void SetActive() {
-		auto shape = getShape();
-		auto zoom = getZoom();
-
-		view.reset(sf::FloatRect(shape->Position, shape->Size));
-		view.zoom(zoom->Zoom);
-
-		Engine->Window->setView(view);
-	}
+	__forceinline void SetActive();
 	
 	/// <summary>
 	/// Get the camera bounds in world coordinates
 	/// </summary>
-	inline sf::FloatRect getCameraBounds() {
-		auto shape = getShape();
-		auto zoom = getZoom();
-
-		sf::Vector2f topLeft = Engine->Window->mapPixelToCoords(sf::Vector2i(0, 0));
-		sf::Vector2f bottomRight = Engine->Window->mapPixelToCoords(sf::Vector2i(shape->Size.x, shape->Size.y));
-
-		sf::Vector2f sizeInWorld = bottomRight - topLeft;
-
-		sizeInWorld /= zoom->Zoom;
-
-		return sf::FloatRect(topLeft, sizeInWorld);
-	}
+	inline sf::FloatRect getCameraBounds();
 
 	/// <summary>
 	/// Convert pixel coordinates to world coordinates
 	/// </summary>
-	inline sf::Vector2f pixelToWorld(sf::Vector2f pixelPos) {
-		sf::Vector2f worldPos = Engine->Window->mapPixelToCoords(sf::Vector2i(pixelPos.x, pixelPos.y));
-		
-		return worldPos;
-	}
+	inline sf::Vector2f pixelToWorld(sf::Vector2f pixelPos);
 
 	/// <summary>
 	/// Get the center of the camera in world coordinates
 	/// </summary>
-	inline sf::Vector2f getOrigin() {
-		auto shape = getShape();
-		auto zoom = getZoom();
-
-		sf::View tmp = sf::View(sf::FloatRect(shape->Position, shape->Size));
-		tmp.zoom(zoom->Zoom);
-
-		auto center = tmp.getCenter();
-
-		return center;
-	}
+	inline sf::Vector2f getOrigin();
 
 public: // events
 
 #pragma region Movement & Zooming
-	__forceinline void OnMouseMoveEvent(sf::Event::MouseMoveEvent e) {
-		if (isAllowMove() && isMoving()) {
-			sf::Vector2f curMousePos = sf::Vector2f(e.x, e.y);
-			sf::Vector2f offset = curMousePos - initMousePos;
+	__forceinline void OnMouseMoveEvent(sf::Event::MouseMoveEvent e);
+	__forceinline void OnMouseButtonPressed(sf::Event::MouseButtonEvent e);
+	__forceinline void OnMouseButtonReleased(sf::Event::MouseButtonEvent e);
 
-			auto shape = getShape();
-			auto zoom = getZoom();
-
-			shape->Position -= offset * zoom->Zoom;
-
-			initMousePos = curMousePos;
-		}
-	}
-
-	__forceinline void OnMouseButtonPressed(sf::Event::MouseButtonEvent e) {
-		if (isAllowMove() && e.button == sf::Mouse::Button::Right) {
-			Context.addComponent<FlagComponent<isMovingFlag>>();
-			initMousePos = sf::Vector2f(e.x, e.y);
-		}
-	}
-
-	__forceinline void OnMouseButtonReleased(sf::Event::MouseButtonEvent e) {
-		if (isAllowMove() && e.button == sf::Mouse::Button::Right) {
-			Context.removeComponent<FlagComponent<isMovingFlag>>();
-		}
-	}
-
-	__forceinline void OnMouseWheelScrolled(sf::Event::MouseWheelScrollEvent e) {
-		if (isAllowZoom()) {
-			auto zoom = getZoom();
-
-			float zoomAmount = zoom->StepAmount; // TODO: store in component
-
-			// zoom in or out
-			if (e.delta > 0)
-				zoom->Zoom /= 1 + zoomAmount;
-			else if (e.delta < 0)
-				zoom->Zoom *= 1 + zoomAmount;
-
-			// keep within bounds
-			zoom->Zoom = std::clamp(zoom->Zoom, zoom->MinZoom, zoom->MaxZoom);
-		}
-	}
+	__forceinline void OnMouseWheelScrolled(sf::Event::MouseWheelScrollEvent e);
 #pragma endregion
 
-	__forceinline void OnResize(sf::Event::SizeEvent e) {
-		if (isAutoResize()) {
-			setSize(sf::Vector2f(e.width, e.height));
-		}
-	}
+	__forceinline void OnResize(sf::Event::SizeEvent e);
 
-	__forceinline void OnUpdate(sf::RenderWindow* window) {
-		SetActive(); // lmfao
-	}
+	__forceinline void OnUpdate(sf::RenderWindow* window);
 
 public: // utils
-	__forceinline AABBShapeComponent* getShape() { return Context.tryGetComponent<AABBShapeComponent>(); }
-	__forceinline ZoomComponent* getZoom() { return Context.tryGetComponent<ZoomComponent>(); }
+	DEFINE_GET_COMPONENT(Shape, AABBShapeComponent);
+	DEFINE_GET_COMPONENT(Zoom, ZoomComponent);
 
-	__forceinline bool isAutoResize() { return Context.hasComponent<FlagComponent<AutoResizeFlag>>(); }
-	__forceinline bool isAllowZoom() { return Context.hasComponent<FlagComponent<AllowZoomFlag>>(); }
-	__forceinline bool isAllowMove() { return Context.hasComponent<FlagComponent<AllowMoveFlag>>(); }
-	__forceinline bool isMoving() { return Context.hasComponent<FlagComponent<isMovingFlag>>(); }
+	DEFINE_IS_COMPONENT(AutoResize, AutoResizeFlag);
+	DEFINE_IS_COMPONENT(AllowZoom, AllowZoomFlag);
+	DEFINE_IS_COMPONENT(AllowMove, AllowMoveFlag);
+	DEFINE_IS_COMPONENT(Moving, isMovingFlag);
 };
 
 #endif // CAMERA2D_SERVICE_H

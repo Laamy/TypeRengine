@@ -42,7 +42,7 @@ public:
 			SolidObject* tmp = new SolidObject();
 
 			// setup object dimensions via its AABBShapeComponent
-			auto shape = tmp->GetShape();
+			auto shape = tmp->getShape();
 			shape->Size = sf::Vector2f(100, 100);
 
 			// add object to scene

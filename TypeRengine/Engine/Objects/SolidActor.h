@@ -8,8 +8,7 @@ class ClientInstance;
 #include "../Components/Components/AABBShapeComponent.h"
 #include "../Components/Components/CountComponent.h"
 
-#define DEFINE_GET_COMPONENT(CustomName, ComponentType) \
-    __forceinline ComponentType* Get##CustomName() { return Context.tryGetComponent<ComponentType>(); }
+#include "../../Macros.h"
 
 class SolidActor {
 public:

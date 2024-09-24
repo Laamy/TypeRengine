@@ -143,6 +143,7 @@
     <ClCompile Include="Engine\Objects\SolidActor.cpp" />
     <ClCompile Include="Engine\Objects\SolidObject.cpp" />
     <ClCompile Include="SDK\ClientInstance.cpp" />
+    <ClCompile Include="SDK\Services\Camera2DService.cpp" />
     <ClCompile Include="TypeRengine.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +166,7 @@
     <ClInclude Include="Engine\GameEngine.h" />
     <ClInclude Include="Engine\Level\Spatial\SpatialMap.h" />
     <ClInclude Include="Engine\Level.h" />
+    <ClInclude Include="Macros.h" />
     <ClInclude Include="SDK\ClientInstance.h" />
     <ClInclude Include="SDK\Services\Camera2DService.h" />
   </ItemGroup>
